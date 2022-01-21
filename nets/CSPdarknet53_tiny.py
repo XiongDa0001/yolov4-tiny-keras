@@ -71,7 +71,8 @@ def resblock_body(x, num_filters):
     route = x
 
     # 对特征层的通道进行分割，取第二部分作为主干部分。
-    x = Lambda(route_group, arguments={'groups':2, 'group_id':1})(x) 
+    # x = Lambda(route_group, arguments={'groups':2, 'group_id':1})(x) 
+    x = DarknetConv2D_BN_Leaky(int(num_filters / 2), kernel_size=(1, 1))(x)
     # 对主干部分进行3x3卷积
     x = DarknetConv2D_BN_Leaky(int(num_filters/2), (3,3))(x)
     # 引出一个小的残差边route_1

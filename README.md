@@ -1,14 +1,5 @@
 ## YOLOV4-Tiny：You Only Look Once-Tiny目标检测模型在Keras当中的实现
----
 
-**2021年10月12日更新：**   
-**进行了大幅度的更新，对代码的模块进行修改，加了大量注释。**   
-
-**2021年5月21日更新：**   
-**增加了各类注意力机制，并添加在FPN部分，检测效果有一定的提升。**
-
-**2021年2月7日更新：**   
-**仔细对照了darknet库的网络结构，发现P5_Upsample和feat1的顺序搞反了，已经调整，重新训练了权值，加入letterbox_image的选项，关闭letterbox_image后网络的map得到提升。**
 
 ## 目录
 1. [性能情况 Performance](#性能情况)
@@ -156,7 +147,9 @@ _defaults = {
 img/street.jpg
 ```
 4. 在predict.py里面进行设置可以进行fps测试和video视频检测。  
-
+## freeze为pb的步骤
+在keras2pb.py里面第59行设置你自己数据集的num_class
+运行完之后会生成pb文件
 ## 评估步骤 
 ### a、评估VOC07+12的测试集
 1. 本文使用VOC格式进行评估。VOC07+12已经划分好了测试集，无需利用voc_annotation.py生成ImageSets文件夹下的txt。

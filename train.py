@@ -1,7 +1,7 @@
 import keras.backend as K
 from keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
 from keras.optimizers import Adam
-
+from keras.layers import Input
 from nets.yolo import get_train_model, yolo_body
 from utils.callbacks import (ExponentDecayScheduler, LossHistory,
                              WarmUpCosineDecayScheduler)
@@ -58,7 +58,7 @@ if __name__ == "__main__":
     #   网络一般不从0开始训练，至少会使用主干部分的权值，有些论文提到可以不用预训练，主要原因是他们 数据集较大 且 调参能力优秀。
     #   如果一定要训练网络的主干部分，可以了解imagenet数据集，首先训练分类模型，分类模型的 主干部分 和该模型通用，基于此进行训练。
     #----------------------------------------------------------------------------------------------------------------------------#
-    model_path      = 'model_data/yolov4_tiny_weights_coco.h5'
+    model_path      = 'model_data/yolov4_tiny_weights_voc.h5'
     #------------------------------------------------------#
     #   输入的shape大小，一定要是32的倍数
     #------------------------------------------------------#
@@ -131,7 +131,8 @@ if __name__ == "__main__":
     #------------------------------------------------------#
     #   创建yolo模型
     #------------------------------------------------------#
-    model_body  = yolo_body((None, None, 3), anchors_mask, num_classes, phi = phi)
+    inputs = Input(shape=(None, None, 3))
+    model_body  = yolo_body(inputs, anchors_mask, num_classes, phi = phi)
     if model_path != '':
         #------------------------------------------------------#
         #   载入预训练权重
@@ -149,7 +150,7 @@ if __name__ == "__main__":
     #-------------------------------------------------------------------------------#
     logging         = TensorBoard(log_dir = 'logs/')
     checkpoint      = ModelCheckpoint('logs/ep{epoch:03d}-loss{loss:.3f}-val_loss{val_loss:.3f}.h5',
-                            monitor = 'val_loss', save_weights_only = True, save_best_only = False, period = 1)
+                            monitor = 'val_loss', save_weights_only = True, save_best_only = True, period = 1)
     if Cosine_scheduler:
         reduce_lr   = WarmUpCosineDecayScheduler(T_max = 5, eta_min = 1e-5, verbose = 1)
     else:

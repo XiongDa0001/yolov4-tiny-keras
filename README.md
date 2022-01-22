@@ -3,8 +3,9 @@
 
 ## 1.训练步骤
 具体训练步骤可以参考<https://github.com/bubbliiiing/yolov4-tiny-keras>
+nets/CSPdarknet53_tiny.py中的resblock_body有一个切片操作Vitis-AI compiler不支持，因此用1x1卷积代替
+![image](https://user-images.githubusercontent.com/71107056/150624788-ed027f3b-4b67-45c5-9ade-a6db1dcad58f.png)
 
- 
 ## 2.将训练好的h5冻结为pb格式
 修改keras2pb.py里面的配置参数
 

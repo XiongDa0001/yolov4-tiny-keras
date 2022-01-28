@@ -19,7 +19,29 @@ c.在keras2pb.py里面第59行设置你自己数据集的num_class
 
 修改好后运行就会生成pb文件
 ## Vitis-AI量化步骤
+
+进入Vitis-AI docker环境，激活vitis-ai-tensorflow
+
+vai_q_tensorflow quantize \
+     --input_frozen_graph ~.pb \
+     --input_nodes input_1 \
+     --input_shapes ?,416,416,3 \
+     --output_dir ./quantize14 \
+     --output_nodes conv2d_21/BiasAdd,conv2d_24/BiasAdd \
+     --input_fn input_fn.calib_input \
+     --calib_iter 25
+     
+将input_fn.py放进量化的环境中
+
 ## Vitis-AI编译步骤
+
+vai_c_tensorflow \
+    --f ./quantize14/quantize_eval_model.pb \
+    --a   kv260arch_B3136.json \
+    --output_dir compile14 \
+    --n   HatDetection \
+    --options '{"input_shape": "1,224,224,3"}'
+
 
 ## Reference
 https://github.com/qqwweee/keras-yolo3  

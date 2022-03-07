@@ -39,7 +39,7 @@ vai_c_tensorflow \
     --f ./quantize14/quantize_eval_model.pb \
     --a   kv260arch_B3136.json \
     --output_dir compile14 \
-    --n   HatDetection \
+    --n   mask_detection \
     --options '{"input_shape": "1,224,224,3"}'
 
 

@@ -21,7 +21,7 @@ from tensorflow import keras
 from keras import backend as K
 from keras.layers import Input
 from keras.models import model_from_json, model_from_yaml
-from nets.yolo import  yolo_body
+from nets.yolo4_tiny.py  import  yolo_body
 
 K.set_learning_phase(0)
 FLAGS = flags.FLAGS

@@ -26,12 +26,12 @@ from nets.yolo import  yolo_body
 K.set_learning_phase(0)
 FLAGS = flags.FLAGS
 
-flags.DEFINE_string('input_model',default='./frozon_result/yolov4-tiny-fire.h5', help='Path to the input model.')
+flags.DEFINE_string('input_model',default='./frozon_result/yolov4-tiny.h5', help='Path to the input model.')
 flags.DEFINE_string('input_model_json', None, 'Path to the input model '
                                               'architecture in json format.')
 flags.DEFINE_string('input_model_yaml', None, 'Path to the input model '
                                               'architecture in yaml format.')
-flags.DEFINE_string('output_model', default='./frozon_result/yolov4-tiny-fire.pb', help='Path where the converted model will '
+flags.DEFINE_string('output_model', default='./frozon_result/yolov4-tiny.pb', help='Path where the converted model will '
                                           'be stored.')
 flags.DEFINE_boolean('save_graph_def', False,
                      'Whether to save the graphdef.pbtxt file which contains '

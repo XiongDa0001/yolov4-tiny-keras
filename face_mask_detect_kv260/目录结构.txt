@@ -1,0 +1,9 @@
+
+©À©¤face_mask
+	|_____aiinference.json
+	|_____drawresult.json
+	|_____preprocess.json
+©¸©¤mask-detection-yolo4-tiny
+	|_____mask-detection-yolo4-tiny.prototxt
+	|_____mask-detection-yolo4-tiny.xmodel
+	|_____label.json

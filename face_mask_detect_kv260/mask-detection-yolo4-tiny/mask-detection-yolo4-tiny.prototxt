@@ -1,0 +1,36 @@
+model {
+  name: "HatDetection"
+  kernel {
+     name: "mask-detection-yolo4-tiny"
+     mean: 0.0
+     mean: 0.0
+     mean: 0.0
+     scale: 0.00390625
+     scale: 0.00390625
+     scale: 0.00390625
+  }
+  model_type : YOLOv3
+  yolo_v3_param {
+    num_classes: 2
+    anchorCnt: 3
+    layer_name: "21"
+    layer_name: "24"
+    conf_threshold: 0.5
+    nms_threshold: 0.3
+    biases: 41
+    biases: 42
+    biases: 55
+    biases: 59
+    biases: 84
+    biases: 79
+    biases: 101
+    biases: 100
+    biases: 155
+    biases: 145
+    biases: 244
+    biases: 239
+ 
+    test_mAP: false
+  }
+  is_tf : true
+}

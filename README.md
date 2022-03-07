@@ -39,5 +39,6 @@ vai_c_tensorflow \
 
 
 ## Reference
+测试量化前后的mAP:https://blog.csdn.net/weixin_43850171/article/details/123223547?spm=1001.2014.3001.5502
 https://github.com/qqwweee/keras-yolo3  
 https://github.com/bubbliiiing/yolov4-tiny-keras

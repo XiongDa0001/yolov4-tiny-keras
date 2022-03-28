@@ -1,3 +1,15 @@
+#!/usr/bin/env python
+"""
+Copyright (c) 2019, by the Authors: Amir H. Abdi
+This script is freely available under the MIT Public License.
+Please see the License file in the root for details.
+The following code snippet will convert the keras model files
+to the freezed .pb tensorflow weight file. The resultant TensorFlow model
+holds both the model architecture and its associated weights.
+"""
+import os
+
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import tensorflow as tf
 from tensorflow.python.framework import graph_util
 from tensorflow.python.framework import graph_io
@@ -5,19 +17,21 @@ from pathlib import Path
 from absl import app
 from absl import flags
 from absl import logging
-import tensorflow.keras as keras
-from tensorflow.keras import backend as K
-from tensorflow.keras.models import model_from_json, model_from_yaml
+from tensorflow import keras
+from keras import backend as K
+from keras.layers import Input
+from keras.models import model_from_json, model_from_yaml
+from nets.yolo import yolo_body
 
 K.set_learning_phase(0)
 FLAGS = flags.FLAGS
 
-flags.DEFINE_string('input_model', None, 'Path to the input model.')
+flags.DEFINE_string('input_model',default='logs/yolov4-tiny.h5', help='Path to the input model.')
 flags.DEFINE_string('input_model_json', None, 'Path to the input model '
                                               'architecture in json format.')
 flags.DEFINE_string('input_model_yaml', None, 'Path to the input model '
                                               'architecture in yaml format.')
-flags.DEFINE_string('output_model', None, 'Path where the converted model will '
+flags.DEFINE_string('output_model', default='logs/yolov4-tiny.pb', help='Path where the converted model will '
                                           'be stored.')
 flags.DEFINE_boolean('save_graph_def', False,
                      'Whether to save the graphdef.pbtxt file which contains '
@@ -40,22 +54,25 @@ flags.DEFINE_boolean('output_meta_ckpt', False,
                      '.data files, with a checkpoint file. These can be later '
                      'loaded in TensorFlow to continue training.')
 
+
+
+flags.DEFINE_integer('num_class', 20,
+                     'num_class for yolo')
+
 flags.mark_flag_as_required('input_model')
 flags.mark_flag_as_required('output_model')
 
 
 def load_model(input_model_path, input_json_path=None, input_yaml_path=None):
     if not Path(input_model_path).exists():
-        raise FileNotFoundError('Model file `{}` does not exist.'.format(input_model_path))
+        raise FileNotFoundError(
+            'Model file `{}` does not exist.'.format(input_model_path))
     try:
-        # model = keras.models.load_model(input_model_path, compile=False)
-        with open(input_json_path) as json_file:
-            json_config = json_file.read()
-            model = tf.keras.models.model_from_json(json_config, custom_objects={'tf': tf})
+        model = keras.models.load_model(input_model_path)
+        model = yolo_body(Input(shape=(None, None, 3)), 3, FLAGS.num_class)
 
-            # Load weights
-            model.load_weights(input_model_path)
-            return model
+        model.load_weights('input_model_path')
+        return model
     except FileNotFoundError as err:
         logging.error('Input mode file (%s) does not exist.', FLAGS.input_model)
         raise err
@@ -112,16 +129,18 @@ def main(args):
     output_model_pbtxt_name = output_model_stem + '.pbtxt'
 
     # Create output directory if it does not exist
-    #Path(output_model).parent.mkdir(parents=True, exist_ok=True)
-    #Path(output_model).parent.mkdir(parents=True)
+    Path(output_model).parent.mkdir(parents=True, exist_ok=True)
 
     if FLAGS.channels_first:
         K.set_image_data_format('channels_first')
     else:
         K.set_image_data_format('channels_last')
 
-    model = load_model(FLAGS.input_model, FLAGS.input_model_json, FLAGS.input_model_yaml)
+    # model = load_model(FLAGS.input_model, FLAGS.input_model_json, FLAGS.input_model_yaml)
+    model = None
 
+    model = yolo_body(Input(shape=(None, None, 3)), 3, FLAGS.num_class)
+    model.load_weights(FLAGS.input_model)
     # TODO(amirabdi): Support networks with multiple inputs
     orig_output_node_names = [node.op.name for node in model.outputs]
     if FLAGS.output_nodes_prefix:

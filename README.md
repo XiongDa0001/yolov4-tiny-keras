@@ -11,6 +11,7 @@ nets/CSPdarknet53_tiny.py中的resblock_body有一个切片操作Vitis-AI compil
 ## 2.将训练好的h5冻结为pb格式
 修改keras2pb.py里面的配置参数
 
+input_model output_model和num_class
 
 修改好后运行就会生成pb文件
 ## Vitis-AI量化步骤

@@ -6,13 +6,13 @@
     {
       "library-name":"libivas_xdpuinfer.so",
       "config": {
-	"model-name" : "densebox_640_360",
-	"model-class" : "FACEDETECT",
-	"model-path" : "/opt/xilinx/share/vitis_ai_library/models/kv260-smartcam",
-	"run_time_model" : false,
-	"need_preprocess" : false,
-	"performance_test" : false,
-	"debug_level" : 0
+        "model-name" : "mask-detection-yolo4-tiny",
+        "model-class" : "YOLOV3",
+        "model-path" : "/opt/xilinx/share/vitis_ai_library/models/kv260-smartcam",
+        "run_time_model" : false,
+        "need_preprocess" : true,
+        "performance_test" : true,
+        "debug_level" : 0
       }
     }
   ]
